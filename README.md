@@ -1,5 +1,6 @@
 # 🔒 Moodle Quiz Access Rule: Oral & Practical Exam Mode (`quizaccess_oralexam`)
 
+[![Moodle Plugin CI](https://github.com/engfeda-ui/quizaccess_oralexam/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/engfeda-ui/quizaccess_oralexam/actions/workflows/ci.yml)
 [![Moodle Compatibility](https://img.shields.io/badge/Moodle-4.0%20to%205.2%2B-orange.svg?style=flat-square)](https://moodle.org)
 [![PHP Version](https://img.shields.io/badge/PHP-8.1%20%7C%208.2%20%7C%208.3-blue.svg?style=flat-square)](https://php.net)
 [![Database](https://img.shields.io/badge/Database-PostgreSQL%20%7C%20MySQL%20%7C%20MariaDB-purple.svg?style=flat-square)](https://docs.moodle.org)
