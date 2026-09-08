@@ -13,3 +13,4 @@ $string['oralexam_grader_title'] = 'Oral / Practical Exam Mode Active';
 $string['oralexam_grader_desc'] = 'Student self-attempts are blocked. Evaluate candidates live using the dedicated oral evaluation interface.';
 $string['openoralexam'] = 'Go to Oral Evaluation Sheet';
 $string['privacy:metadata'] = 'The Oral Exam Access Rule plugin does not store any personal data.';
+$string['locked_has_evaluations'] = 'This quiz is permanently locked to Oral / Practical Examination mode because student evaluations and attempts are already recorded. It cannot be reverted to a normal quiz.';

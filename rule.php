@@ -117,11 +117,32 @@ class quizaccess_oralexam extends quiz_access_rule_base {
      * Add settings to the quiz form.
      */
     public static function add_settings_form_fields(mod_quiz_mod_form $quizform, MoodleQuickForm $mform) {
+        global $DB;
+
         $mform->addElement('header', 'oralexamheader', get_string('pluginname', 'quizaccess_oralexam'));
 
         $mform->addElement('selectyesno', 'oralexamenabled', get_string('oralexamenabled', 'quizaccess_oralexam'));
         $mform->setDefault('oralexamenabled', 0);
         $mform->addHelpButton('oralexamenabled', 'oralexamenabled', 'quizaccess_oralexam');
+
+        // Check if this quiz already has attempts / evaluations recorded.
+        $current = method_exists($quizform, 'get_current') ? $quizform->get_current() : null;
+        $quizid = ($current && !empty($current->id)) ? (int)$current->id : 0;
+
+        if ($quizid > 0) {
+            $hasattempts = $DB->record_exists('quiz_attempts', ['quiz' => $quizid]);
+            $isoral = $DB->record_exists('quizaccess_oralexam', ['quizid' => $quizid, 'oralexamenabled' => 1]);
+
+            if ($hasattempts && $isoral) {
+                // Permanently freeze the setting once evaluations have started.
+                $mform->freeze('oralexamenabled');
+                $mform->addElement('static', 'oralexam_locked_info', '',
+                    '<div class="alert alert-danger py-2 px-3 mt-2 mb-0 d-inline-flex align-items-center" style="border-radius: 6px;">' .
+                    '<i class="fa fa-lock fa-lg mr-2"></i> <strong>' . get_string('locked_has_evaluations', 'quizaccess_oralexam') . '</strong>' .
+                    '</div>'
+                );
+            }
+        }
     }
 
     /**
@@ -129,6 +150,19 @@ class quizaccess_oralexam extends quiz_access_rule_base {
      */
     public static function save_settings($quiz) {
         global $DB;
+
+        if (empty($quiz->id)) {
+            return;
+        }
+
+        // Strict safeguard: If oral evaluations/attempts exist on this quiz, never allow reverting to 0!
+        $hasattempts = $DB->record_exists('quiz_attempts', ['quiz' => $quiz->id]);
+        $wasoral = $DB->record_exists('quizaccess_oralexam', ['quizid' => $quiz->id, 'oralexamenabled' => 1]);
+
+        if ($hasattempts && $wasoral) {
+            // Force oral exam mode to stay locked!
+            $quiz->oralexamenabled = 1;
+        }
 
         if (empty($quiz->oralexamenabled)) {
             $DB->delete_records('quizaccess_oralexam', ['quizid' => $quiz->id]);
