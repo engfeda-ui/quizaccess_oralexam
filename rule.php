@@ -5,6 +5,14 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Quiz access rule: Oral / Practical Exam restriction.
@@ -28,13 +36,20 @@ if (class_exists('\mod_quiz\local\access_rule_base')) {
 }
 
 /**
- * A rule that designates a quiz as an oral/practical exam,
- * preventing student self-attempts while providing examiners direct grading access.
+ * A rule that designates a quiz as an oral/practical exam.
+ *
+ * @package    quizaccess_oralexam
+ * @copyright  2026 Mahmoud Salem
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class quizaccess_oralexam extends quiz_access_rule_base {
-
     /**
      * Factory method: returns an instance if enabled on this quiz.
+     *
+     * @param quiz $quizobj Information about the quiz in question.
+     * @param int $timenow The time that should be considered as 'now'.
+     * @param bool $canignoretimelimits Whether the current user is exempt from time limits.
+     * @return quiz_access_rule_base|null The rule, if applicable, else null.
      */
     public static function make(quiz $quizobj, $timenow, $canignoretimelimits) {
         if (empty($quizobj->get_quiz()->oralexamenabled)) {
@@ -45,13 +60,19 @@ class quizaccess_oralexam extends quiz_access_rule_base {
 
     /**
      * Prevent student from starting a new attempt.
+     *
+     * @param int $numprevattempts The number of previous attempts.
+     * @param \stdClass|false $lastattempt Information about the previous attempt.
+     * @return string|false String if access should be prevented, false otherwise.
      */
     public function prevent_new_attempt($numprevattempts, $lastattempt) {
         global $USER;
         $context = \context_module::instance($this->quizobj->get_cmid());
 
-        // Teachers / graders can bypass to preview.
-        if (has_capability('mod/quiz:grade', $context, $USER->id) || has_capability('quiz/oralexam:evaluate', $context, $USER->id)) {
+        // Teachers and graders can bypass to preview.
+        $canbypass = has_capability('mod/quiz:grade', $context, $USER->id) ||
+            has_capability('quiz/oralexam:evaluate', $context, $USER->id);
+        if ($canbypass) {
             return false;
         }
 
@@ -61,12 +82,16 @@ class quizaccess_oralexam extends quiz_access_rule_base {
 
     /**
      * Prevent access to startattempt.php.
+     *
+     * @return string|false String if access should be prevented, false otherwise.
      */
     public function prevent_access() {
         global $USER;
         $context = \context_module::instance($this->quizobj->get_cmid());
 
-        if (has_capability('mod/quiz:grade', $context, $USER->id) || has_capability('quiz/oralexam:evaluate', $context, $USER->id)) {
+        $canbypass = has_capability('mod/quiz:grade', $context, $USER->id) ||
+            has_capability('quiz/oralexam:evaluate', $context, $USER->id);
+        if ($canbypass) {
             return false;
         }
 
@@ -75,37 +100,48 @@ class quizaccess_oralexam extends quiz_access_rule_base {
 
     /**
      * Display information notice on quiz view page.
+     *
+     * @return string HTML notice for quiz view page.
      */
     public function description() {
-        global $CFG, $USER;
+        global $USER;
 
         $context = \context_module::instance($this->quizobj->get_cmid());
         $cmid = $this->quizobj->get_cmid();
-        $isgrader = has_capability('mod/quiz:grade', $context, $USER->id) || has_capability('quiz/oralexam:evaluate', $context, $USER->id);
+        $isgrader = has_capability('mod/quiz:grade', $context, $USER->id) ||
+            has_capability('quiz/oralexam:evaluate', $context, $USER->id);
 
         $html = '';
         if ($isgrader) {
             $evalurl = new \moodle_url('/mod/quiz/report.php', ['id' => $cmid, 'mode' => 'oralexam']);
-            $html .= '<div class="alert alert-info shadow-sm p-3 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-3" style="border-left: 5px solid #0284c7 !important; border-radius: 10px;">';
+            $html .= '<div class="alert alert-info shadow-sm p-3 mb-4 d-flex ' .
+                'align-items-center justify-content-between flex-wrap gap-3" ' .
+                'style="border-left: 5px solid #0284c7 !important; border-radius: 10px;">';
             $html .= '  <div class="d-flex align-items-center">';
             $html .= '    <i class="fa fa-microphone fa-2x mr-3 text-primary"></i>';
             $html .= '    <div>';
-            $html .= '      <h5 class="mb-1 font-weight-bold">' . get_string('oralexam_grader_title', 'quizaccess_oralexam') . '</h5>';
-            $html .= '      <p class="mb-0 text-muted">' . get_string('oralexam_grader_desc', 'quizaccess_oralexam') . '</p>';
+            $html .= '      <h5 class="mb-1 font-weight-bold">' .
+                get_string('oralexam_grader_title', 'quizaccess_oralexam') . '</h5>';
+            $html .= '      <p class="mb-0 text-muted">' .
+                get_string('oralexam_grader_desc', 'quizaccess_oralexam') . '</p>';
             $html .= '    </div>';
             $html .= '  </div>';
             $html .= '  <div>';
             $html .= '    <a href="' . $evalurl->out(false) . '" class="btn btn-primary btn-lg shadow-sm font-weight-bold">';
-            $html .= '      <i class="fa fa-pencil-square-o mr-1"></i> ' . get_string('openoralexam', 'quizaccess_oralexam');
+            $html .= '      <i class="fa fa-pencil-square-o mr-1"></i> ' .
+                get_string('openoralexam', 'quizaccess_oralexam');
             $html .= '    </a>';
             $html .= '  </div>';
             $html .= '</div>';
         } else {
-            $html .= '<div class="alert alert-warning shadow-sm p-3 mb-4 d-flex align-items-center" style="border-left: 5px solid #f59e0b !important; border-radius: 10px;">';
+            $html .= '<div class="alert alert-warning shadow-sm p-3 mb-4 d-flex align-items-center" ' .
+                'style="border-left: 5px solid #f59e0b !important; border-radius: 10px;">';
             $html .= '  <i class="fa fa-info-circle fa-2x mr-3 text-warning"></i>';
             $html .= '  <div>';
-            $html .= '    <h5 class="mb-1 font-weight-bold text-dark">' . get_string('oralexam_student_title', 'quizaccess_oralexam') . '</h5>';
-            $html .= '    <p class="mb-0 text-muted">' . get_string('oralexam_student_desc', 'quizaccess_oralexam') . '</p>';
+            $html .= '    <h5 class="mb-1 font-weight-bold text-dark">' .
+                get_string('oralexam_student_title', 'quizaccess_oralexam') . '</h5>';
+            $html .= '    <p class="mb-0 text-muted">' .
+                get_string('oralexam_student_desc', 'quizaccess_oralexam') . '</p>';
             $html .= '  </div>';
             $html .= '</div>';
         }
@@ -115,6 +151,9 @@ class quizaccess_oralexam extends quiz_access_rule_base {
 
     /**
      * Add settings to the quiz form.
+     *
+     * @param \mod_quiz_mod_form $quizform The quiz form.
+     * @param \MoodleQuickForm $mform The quickform object to add elements to.
      */
     public static function add_settings_form_fields(mod_quiz_mod_form $quizform, MoodleQuickForm $mform) {
         global $DB;
@@ -136,10 +175,16 @@ class quizaccess_oralexam extends quiz_access_rule_base {
             if ($hasattempts && $isoral) {
                 // Permanently freeze the setting once evaluations have started.
                 $mform->freeze('oralexamenabled');
-                $mform->addElement('static', 'oralexam_locked_info', '',
-                    '<div class="alert alert-danger py-2 px-3 mt-2 mb-0 d-inline-flex align-items-center" style="border-radius: 6px;">' .
-                    '<i class="fa fa-lock fa-lg mr-2"></i> <strong>' . get_string('locked_has_evaluations', 'quizaccess_oralexam') . '</strong>' .
-                    '</div>'
+                $lockmsg = '<div class="alert alert-danger py-2 px-3 mt-2 mb-0 ' .
+                    'd-inline-flex align-items-center" style="border-radius: 6px;">' .
+                    '<i class="fa fa-lock fa-lg mr-2"></i> <strong>' .
+                    get_string('locked_has_evaluations', 'quizaccess_oralexam') .
+                    '</strong></div>';
+                $mform->addElement(
+                    'static',
+                    'oralexam_locked_info',
+                    '',
+                    $lockmsg
                 );
             }
         }
@@ -147,6 +192,8 @@ class quizaccess_oralexam extends quiz_access_rule_base {
 
     /**
      * Save settings to DB.
+     *
+     * @param \stdClass $quiz The quiz settings object.
      */
     public static function save_settings($quiz) {
         global $DB;
@@ -182,6 +229,8 @@ class quizaccess_oralexam extends quiz_access_rule_base {
 
     /**
      * Delete settings when quiz is deleted.
+     *
+     * @param \stdClass $quiz The quiz settings object.
      */
     public static function delete_settings($quiz) {
         global $DB;
@@ -190,6 +239,9 @@ class quizaccess_oralexam extends quiz_access_rule_base {
 
     /**
      * Return SQL snippet to join rule settings.
+     *
+     * @param int $quizid The quiz id.
+     * @return array Array with sql, joins, and params.
      */
     public static function get_settings_sql($quizid) {
         return [
