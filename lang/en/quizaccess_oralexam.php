@@ -26,8 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['cannotattemptoral'] = 'This is an oral / practical examination evaluated directly by the instructor/examiner. ' .
     'Students are not allowed to attempt or submit answers directly.';
-$string['locked_has_evaluations'] = 'This quiz is permanently locked to Oral / Practical Examination mode because ' .
-    'student evaluations and attempts are already recorded. It cannot be reverted to a normal quiz.';
+$string['notice_has_evaluations'] = 'Notice: This quiz already has recorded attempts. You can toggle Oral Exam mode at any time. ' .
+    'When enabled (Yes), students cannot attempt the quiz online. When disabled (No), students can attempt it normally.';
 $string['openoralexam'] = 'Go to Oral Evaluation Sheet';
 $string['oralexam_grader_desc'] = 'Student self-attempts are blocked. ' .
     'Evaluate candidates live using the dedicated oral evaluation interface.';

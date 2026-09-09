@@ -173,18 +173,17 @@ class quizaccess_oralexam extends quiz_access_rule_base {
             $isoral = $DB->record_exists('quizaccess_oralexam', ['quizid' => $quizid, 'oralexamenabled' => 1]);
 
             if ($hasattempts && $isoral) {
-                // Permanently freeze the setting once evaluations have started.
-                $mform->freeze('oralexamenabled');
-                $lockmsg = '<div class="alert alert-danger py-2 px-3 mt-2 mb-0 ' .
+                // Show informative notice while keeping the toggle fully editable.
+                $noticemsg = '<div class="alert alert-info py-2 px-3 mt-2 mb-0 ' .
                     'd-inline-flex align-items-center" style="border-radius: 6px;">' .
-                    '<i class="fa fa-lock fa-lg mr-2"></i> <strong>' .
-                    get_string('locked_has_evaluations', 'quizaccess_oralexam') .
-                    '</strong></div>';
+                    '<i class="fa fa-info-circle fa-lg mr-2"></i> <span>' .
+                    get_string('notice_has_evaluations', 'quizaccess_oralexam') .
+                    '</span></div>';
                 $mform->addElement(
                     'static',
-                    'oralexam_locked_info',
+                    'oralexam_has_evaluations_info',
                     '',
-                    $lockmsg
+                    $noticemsg
                 );
             }
         }
@@ -200,15 +199,6 @@ class quizaccess_oralexam extends quiz_access_rule_base {
 
         if (empty($quiz->id)) {
             return;
-        }
-
-        // Strict safeguard: If oral evaluations/attempts exist on this quiz, never allow reverting to 0!
-        $hasattempts = $DB->record_exists('quiz_attempts', ['quiz' => $quiz->id]);
-        $wasoral = $DB->record_exists('quizaccess_oralexam', ['quizid' => $quiz->id, 'oralexamenabled' => 1]);
-
-        if ($hasattempts && $wasoral) {
-            // Force oral exam mode to stay locked!
-            $quiz->oralexamenabled = 1;
         }
 
         if (empty($quiz->oralexamenabled)) {

@@ -5,7 +5,7 @@
 [![PHP Version](https://img.shields.io/badge/PHP-8.1%20%7C%208.2%20%7C%208.3-blue.svg?style=flat-square)](https://php.net)
 [![Database](https://img.shields.io/badge/Database-PostgreSQL%20%7C%20MySQL%20%7C%20MariaDB-purple.svg?style=flat-square)](https://docs.moodle.org)
 [![License](https://img.shields.io/badge/License-GPL%20v3-green.svg?style=flat-square)](http://www.gnu.org/copyleft/gpl.html)
-[![Version](https://img.shields.io/badge/Version-v1.0.1-blue.svg?style=flat-square)](https://github.com/engfeda-ui/quizaccess_oralexam)
+[![Version](https://img.shields.io/badge/Version-v1.1.0-blue.svg?style=flat-square)](https://github.com/engfeda-ui/quizaccess_oralexam)
 
 A professional Moodle quiz access rule plugin designed for **in-person Oral, OSCE, and Practical Examinations (Workshops & Labs)**. It restricts students from attempting the exam on their own while providing teachers and examiners full control to grade candidates face-to-face via the companion plugin [`quiz_oralexam`](https://github.com/engfeda-ui/quiz_oralexam).
 
@@ -15,7 +15,7 @@ A professional Moodle quiz access rule plugin designed for **in-person Oral, OSC
 
 - **🚫 Student Self-Attempt Restriction:** Completely hides and disables the "Attempt quiz now" button for students when the quiz is flagged as an oral or practical examination.
 - **📢 Clear Examiner Notice:** Displays a styled, informative alert message informing students that this exam is assessed live and in-person by an authorized examiner.
-- **🔒 Anti-Tampering Auto-Lock:** Automatically freezes and permanently locks the Oral Exam mode in the Quiz settings once student evaluations and attempts are recorded in the database, preventing accidental conversion back to standard quizzes.
+- **🔄 Full Instructor Flexibility & Dynamic Mode:** Teachers maintain complete administrative control to toggle Oral Exam mode On or Off at any time. When enabled, student self-attempts are blocked; when disabled, students can attempt the quiz normally online while existing attempts and grades remain safely preserved.
 - **🛡️ Enterprise-Ready Integrations:**
   - **Security Companion:** Enforces mutual dependency on [`quiz_oralexam`](https://github.com/engfeda-ui/quiz_oralexam) to ensure an active live examiner station is always available.
   - **GDPR Privacy Compliance:** Implements Moodle's Privacy Subsystem (`null_provider`) adhering to GDPR regulations.
@@ -58,11 +58,17 @@ A professional Moodle quiz access rule plugin designed for **in-person Oral, OSC
 3. Under **Oral / Practical Examination Mode**:
    - Set **Enable Oral / Practical Exam Mode** to **Yes**.
 4. Save the quiz settings. Students will now see an examiner instructions notice and cannot launch attempts on their own.
-5. Once any evaluation is completed by examiners, this setting is automatically **frozen and locked** to protect assessment integrity.
+5. Teachers can toggle this mode On or Off at any time as examination schedules dictate.
 
 ---
 
 ## 📋 Changelog
+
+### v1.1.0 (2026-09-09)
+- **Removed Permanent Lock & Enabled Dynamic Mode Toggling:**
+  - Removed rigid `$mform->freeze()` and database lock in `save_settings`, allowing instructors to freely toggle Oral Exam mode On or Off at any time.
+  - Added an informative alert notice informing examiners when a quiz has recorded attempts, without blocking their ability to re-open the quiz to standard student attempts.
+  - Preserved student attempt history and gradebook integrity regardless of mode switches.
 
 ### v1.0.1 (2026-09-08)
 - **Auto-Lock Safeguard:** Added automatic freezing of the Oral Exam toggle in Quiz settings once evaluations exist.
