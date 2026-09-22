@@ -113,7 +113,9 @@ class quizaccess_oralexam extends quiz_access_rule_base {
 
         $html = '';
         if ($isgrader) {
-            $evalurl = new \moodle_url('/mod/quiz/report.php', ['id' => $cmid, 'mode' => 'oralexam']);
+            $pluginmanager = \core_plugin_manager::instance();
+            $hasoralreport = ($pluginmanager->get_plugin_info('quiz_oralexam') !== null);
+
             $html .= '<div class="alert alert-info shadow-sm p-3 mb-4 d-flex ' .
                 'align-items-center justify-content-between flex-wrap gap-3" ' .
                 'style="border-left: 5px solid #0284c7 !important; border-radius: 10px;">';
@@ -124,14 +126,21 @@ class quizaccess_oralexam extends quiz_access_rule_base {
                 get_string('oralexam_grader_title', 'quizaccess_oralexam') . '</h5>';
             $html .= '      <p class="mb-0 text-muted">' .
                 get_string('oralexam_grader_desc', 'quizaccess_oralexam') . '</p>';
+            if (!$hasoralreport) {
+                $html .= '      <p class="mb-0 mt-2 text-danger font-weight-bold"><i class="fa fa-exclamation-triangle mr-1"></i> ' .
+                    get_string('companionpluginmissing', 'quizaccess_oralexam') . '</p>';
+            }
             $html .= '    </div>';
             $html .= '  </div>';
-            $html .= '  <div>';
-            $html .= '    <a href="' . $evalurl->out(false) . '" class="btn btn-primary btn-lg shadow-sm font-weight-bold">';
-            $html .= '      <i class="fa fa-pencil-square-o mr-1"></i> ' .
-                get_string('openoralexam', 'quizaccess_oralexam');
-            $html .= '    </a>';
-            $html .= '  </div>';
+            if ($hasoralreport) {
+                $evalurl = new \moodle_url('/mod/quiz/report.php', ['id' => $cmid, 'mode' => 'oralexam']);
+                $html .= '  <div>';
+                $html .= '    <a href="' . $evalurl->out(false) . '" class="btn btn-primary btn-lg shadow-sm font-weight-bold">';
+                $html .= '      <i class="fa fa-pencil-square-o mr-1"></i> ' .
+                    get_string('openoralexam', 'quizaccess_oralexam');
+                $html .= '    </a>';
+                $html .= '  </div>';
+            }
             $html .= '</div>';
         } else {
             $html .= '<div class="alert alert-warning shadow-sm p-3 mb-4 d-flex align-items-center" ' .

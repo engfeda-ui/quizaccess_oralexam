@@ -5,7 +5,7 @@
 [![PHP Version](https://img.shields.io/badge/PHP-8.1%20%7C%208.2%20%7C%208.3-blue.svg?style=flat-square)](https://php.net)
 [![Database](https://img.shields.io/badge/Database-PostgreSQL%20%7C%20MySQL%20%7C%20MariaDB-purple.svg?style=flat-square)](https://docs.moodle.org)
 [![License](https://img.shields.io/badge/License-GPL%20v3-green.svg?style=flat-square)](http://www.gnu.org/copyleft/gpl.html)
-[![Version](https://img.shields.io/badge/Version-v1.1.0-blue.svg?style=flat-square)](https://github.com/engfeda-ui/quizaccess_oralexam)
+[![Version](https://img.shields.io/badge/Version-v1.1.1-blue.svg?style=flat-square)](https://github.com/engfeda-ui/quizaccess_oralexam)
 
 A professional Moodle quiz access rule plugin designed for **in-person Oral, OSCE, and Practical Examinations (Workshops & Labs)**. It restricts students from attempting the exam on their own while providing teachers and examiners full control to grade candidates face-to-face via the companion plugin [`quiz_oralexam`](https://github.com/engfeda-ui/quiz_oralexam).
 
@@ -17,7 +17,7 @@ A professional Moodle quiz access rule plugin designed for **in-person Oral, OSC
 - **📢 Clear Examiner Notice:** Displays a styled, informative alert message informing students that this exam is assessed live and in-person by an authorized examiner.
 - **🔄 Full Instructor Flexibility & Dynamic Mode:** Teachers maintain complete administrative control to toggle Oral Exam mode On or Off at any time. When enabled, student self-attempts are blocked; when disabled, students can attempt the quiz normally online while existing attempts and grades remain safely preserved.
 - **🛡️ Enterprise-Ready Integrations:**
-  - **Security Companion:** Enforces mutual dependency on [`quiz_oralexam`](https://github.com/engfeda-ui/quiz_oralexam) to ensure an active live examiner station is always available.
+  - **Companion Report:** Works seamlessly with [`quiz_oralexam`](https://github.com/engfeda-ui/quiz_oralexam) to provide an active live examiner scoring station.
   - **GDPR Privacy Compliance:** Implements Moodle's Privacy Subsystem (`null_provider`) adhering to GDPR regulations.
   - **Localization Support:** Full bilingual English and Arabic (`ar`) language packs included.
   - **CI/CD Ready:** Automated GitHub Actions workflows using `moodle-plugin-ci`.
@@ -31,7 +31,7 @@ A professional Moodle quiz access rule plugin designed for **in-person Oral, OSC
 | **Moodle Framework** | Moodle 4.0 to 5.2+ (Tested against Moodle 4.5/5.0+ stable branches) |
 | **PHP Runtime** | PHP 8.1, PHP 8.2, PHP 8.3 |
 | **Database System** | PostgreSQL 13+, MySQL 8.0+, or MariaDB 10.5+ |
-| **Required Sub-Plugin** | [`quiz_oralexam`](https://github.com/engfeda-ui/quiz_oralexam) |
+| **Recommended Sub-Plugin** | [`quiz_oralexam`](https://github.com/engfeda-ui/quiz_oralexam) (for examiner live grading) |
 
 ---
 
@@ -63,6 +63,13 @@ A professional Moodle quiz access rule plugin designed for **in-person Oral, OSC
 ---
 
 ## 📋 Changelog
+
+### v1.1.1 (2026-09-22)
+- **Resolved Moodle Plugins Directory Approval Review Feedback:**
+  - **Eliminated Circular Dependency (#4)**: Removed hard requirement on `quiz_oralexam` in `version.php` so administrators can install the access rule directly via Moodle's "Install plugin from ZIP" without dependency deadlocks.
+  - **Added Root License File (#2)**: Included official GNU General Public License v3 (`LICENSE`) file in the plugin root.
+  - **Fixed Language File String Syntax (#3)**: Cleaned all string concatenations (`.`) in `lang/en/quizaccess_oralexam.php` and `lang/ar/quizaccess_oralexam.php` to adhere strictly to Moodle's pure string assignment standards.
+  - **Graceful Degradation**: In `description()`, verified companion plugin availability before rendering action links, providing examiners with an informative advisory if `quiz_oralexam` is not yet installed.
 
 ### v1.1.0 (2026-09-09)
 - **Removed Permanent Lock & Enabled Dynamic Mode Toggling:**
