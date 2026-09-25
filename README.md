@@ -5,7 +5,7 @@
 [![PHP Version](https://img.shields.io/badge/PHP-8.1%20%7C%208.2%20%7C%208.3-blue.svg?style=flat-square)](https://php.net)
 [![Database](https://img.shields.io/badge/Database-PostgreSQL%20%7C%20MySQL%20%7C%20MariaDB-purple.svg?style=flat-square)](https://docs.moodle.org)
 [![License](https://img.shields.io/badge/License-GPL%20v3-green.svg?style=flat-square)](http://www.gnu.org/copyleft/gpl.html)
-[![Version](https://img.shields.io/badge/Version-v1.1.1-blue.svg?style=flat-square)](https://github.com/engfeda-ui/quizaccess_oralexam)
+[![Version](https://img.shields.io/badge/Version-v1.2.1-blue.svg?style=flat-square)](https://github.com/engfeda-ui/moodle-quizaccess_oralexam)
 
 A professional Moodle quiz access rule plugin designed for **in-person Oral, OSCE, and Practical Examinations (Workshops & Labs)**. It restricts students from attempting the exam on their own while providing teachers and examiners full control to grade candidates face-to-face via the companion plugin [`quiz_oralexam`](https://github.com/engfeda-ui/quiz_oralexam).
 
@@ -63,6 +63,15 @@ A professional Moodle quiz access rule plugin designed for **in-person Oral, OSC
 ---
 
 ## 📋 Changelog
+
+### v1.2.1 (2026-09-26)
+- **Official Moodle Plugins Directory & UI Icons (`pix/`):**
+  - **Moodle Plugins Directory Icon**: Created high-resolution 1024x1024, 512x512, and 256x256 PNG icons (`pix/icon.png`, `pix/icon_256.png`, `pix/icon_1024.png`) tailored for directory listing, search results, and plugin cards.
+  - **Vector SVG Icon (`pix/icon.svg`)**: Designed scalable vector graphic icon featuring an emerald security shield, access padlock, and oral exam microphone symbol, compatible with Moodle 4.x/5.x theme engine and high-DPI displays.
+  - **Moodle Directory Compliance**: Satisfies Moodle Plugins Directory approval requirement for official plugin branding assets.
+
+### v1.2.0 (2026-09-25)
+- **Version Bump & Build Alignment**: Increased build number to `2026092501` to meet Moodle Plugins Directory re-submission versioning requirements. Repository renamed to `moodle-quizaccess_oralexam`.
 
 ### v1.1.1 (2026-09-22)
 - **Resolved Moodle Plugins Directory Approval Review Feedback:**
