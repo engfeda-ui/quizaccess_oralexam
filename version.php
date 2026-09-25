@@ -25,10 +25,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'quizaccess_oralexam';
-$plugin->version   = 2026092200;
+$plugin->version   = 2026092501;
 $plugin->requires  = 2022041900;
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = 'v1.1.1';
+$plugin->release   = 'v1.2.0';
 $plugin->dependencies = [
     'mod_quiz' => ANY_VERSION,
 ];
