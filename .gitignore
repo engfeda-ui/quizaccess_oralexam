@@ -4,3 +4,11 @@ Thumbs.db
 *.tmp
 node_modules/
 .agents/
+
+# Deploy Scripts & Infrastructure Secrets
+*deploy*.ps1
+deploy*.ps1
+scripts/deploy*.ps1
+*.key
+*.pem
+*.id_rsa
